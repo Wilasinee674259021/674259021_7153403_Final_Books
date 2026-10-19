@@ -3,21 +3,15 @@ const cors = require("cors");
 require("dotenv").config();
 
 const sequelize = require("./config/db");
-// หมายเหตุ: หากโฟลเดอร์ชื่อ router ให้ใช้ ./router/bookRouter
-// หากโฟลเดอร์ชื่อ routers ให้เปลี่ยนเป็น ./routers/bookRouter
 const bookRouter = require("./router/bookRouter");
-const Book = require("./model/bookModel"); // ✅ แก้ไข: ดึง Book มาโดยตรง ไม่ต้อง destructure
+const Book = require("./model/bookModel");
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// CORS
-app.use(
-  cors({
-    origin: "*",
-    credentials: true,
-  }),
-);
+// ✅ แก้ไขปัญหา CORS ให้ครอบคลุม Preflight (OPTIONS)
+app.use(cors());
+app.options("*", cors()); // อนุญาตทุก HTTP Request methods (GET, POST, PUT, DELETE, OPTIONS)
 
 app.use(express.json());
 
@@ -26,7 +20,7 @@ app.use("/api/books", bookRouter);
 
 app.get("/", (req, res) => res.send("API Running OK"));
 
-// Seed ข้อมูลอย่างน้อย 10 รายการ (ครบ 3 หมวดหมู่ มีทั้งเผยแพร่และฉบับร่าง)
+// Seed ข้อมูลอย่างน้อย 10 รายการ
 const seedInitialData = async () => {
   try {
     const count = await Book.count();
