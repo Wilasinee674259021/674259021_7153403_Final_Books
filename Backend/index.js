@@ -9,9 +9,9 @@ const Book = require("./model/bookModel");
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// ✅ แก้ไขปัญหา CORS ให้ครอบคลุม Preflight (OPTIONS)
+// ✅ แก้ไข: ปรับใช้ /(.*)/ แทน "*" เพื่อรองรับ Express / path-to-regexp เวอร์ชันใหม่
 app.use(cors());
-app.options("*", cors()); // อนุญาตทุก HTTP Request methods (GET, POST, PUT, DELETE, OPTIONS)
+app.options(/(.*)/, cors());
 
 app.use(express.json());
 
