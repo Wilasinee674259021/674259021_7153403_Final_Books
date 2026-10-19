@@ -9,14 +9,14 @@ const Book = require("./model/bookModel");
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// ✅ แก้ไข: ปรับใช้ /(.*)/ แทน "*" เพื่อรองรับ Express / path-to-regexp เวอร์ชันใหม่
+// ✅ เปิดอนุญาต CORS สำหรับทุก Origin และ HTTP Methods
 app.use(cors());
-app.options(/(.*)/, cors());
 
 app.use(express.json());
 
-// Routes
+// ✅ รองรับทั้ง /api/books และ /books (ป้องกันปัญหา Frontend เรียก path ไม่ตรง)
 app.use("/api/books", bookRouter);
+app.use("/books", bookRouter);
 
 app.get("/", (req, res) => res.send("API Running OK"));
 
